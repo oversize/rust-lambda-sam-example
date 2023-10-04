@@ -1,14 +1,8 @@
 # Rust Lambda with SAM
 
-Documentation and example of how to build a rust lambda with SAM.
+Notes and example of how to build a rust lambda with SAM.
 
-Why Sam? While `cargo lambda` has features to build and deploy your
-lambda chances are that you need some more resources in aws. E.g. Hook
-the lambda to an actual trigger in aws, create a role for it, provide
-permissions, provide a bucket ... yada yada yada.
-
-
-All of this is pretty much based on [this talk from Luciano Mammino](https://www.youtube.com/watch?v=He4inXmMZZI)
+All of this is very much based on [this talk from Luciano Mammino](https://www.youtube.com/watch?v=He4inXmMZZI)
 at Rust Dublin.
 
 ## Prerequisites
@@ -17,30 +11,28 @@ at Rust Dublin.
 * [Cargo Lambda](https://www.cargo-lambda.info/)
 * [SAM Cli](https://github.com/aws/aws-sam-cli)
 
-### Cargo Lambda
+## Notes
 
-A cargo subcommand that provides the
+* `samconfig.toml` configures the sam project. The name of the stack and some
+    other parameters. The `sam deploy --guided` command asks for some defaults
+    and updates the config
+* SAM deploys the resources that are defined in template.yaml (or something else
+    defined in the config).
+* If you change the lambda code you need to `sam build` before you can `sam deploy`
+    again. If you dont sam wont see changes (there was no new artefact build)
+* Sam creates the Role for the Lambda implictly. The guided deploy asks for that.
+    Or create the role in template.yaml yourself and set it in `AWS::Serverless::Function`
+* The local development of `cargo lambda` works alongside the sam provided tooling
+* The fact that there is an `Event` Resource in the `Function` Resource alone
+    makes SAM create an apigateway.
+
+????
+* How to connect an application loadbalancer?
+* Or just an http function url?
 
 
-### SAM
 
-SAM is the Serverless Application Model built by AWS. [SAM Docs](https://docs.aws.amazon.com/serverless-application-model/)
-
-TL;DR:
-* Sam is a cli app, that provides the interface to build lambdas and deploy
-  AWS Resources
-* A Template language to define AWS Resources. Its an extension(?) of the
-  CloudFormation specification. E.g. Its much like CloudFormation, plus
-  some extra features for serverless.
-
-The [samp-app](./sam-app/) folder is the example creates from `sam init`.
-
-
-
-## Resources
+## Other Resources
 
 * https://github.com/awslabs/aws-lambda-rust-runtime/tree/main/examples
 * https://github.com/lmammino/earthquake-notifier/tree/main
-
-There is also: https://github.com/cargo-lambda/cargo-lambda-cdk but thats
-for another day. :p
